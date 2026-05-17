@@ -91,4 +91,12 @@ class CharacterListViewModel(private val repository: RickAndMortyRepository) : V
             isFetching = false
         }
     }
+
+    fun retry() {
+        if (_uiState.value is CharacterListUiState.Error) {
+            loadCharacters(isNextPage = false)
+        } else if (_uiState.value is CharacterListUiState.Success) {
+            loadCharacters(isNextPage = true)
+        }
+    }
 }
