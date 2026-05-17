@@ -2,10 +2,19 @@ package com.willydev.rickandmortyapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val PortalGreen = Color(0xFF97CE4C)
+val PortalGreenGlow = Color(0x8097CE4C)
+val SpaceDark = Color(0xFF0A0E14)
+val SpaceDarkElevated = Color(0xFF1A1E24)
+val GlassBackground = Color(0x33FFFFFF)
+val GlassBorder = Color(0x6697CE4C)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Theme Colors
+val PrimaryDark = PortalGreen
+val OnPrimaryDark = Color(0xFF1B3700)
+val BackgroundDark = SpaceDark
+val SurfaceDark = SpaceDarkElevated
+
+// Light Theme Colors
+val PrimaryLight = Color(0xFF3B6A00)
+val OnPrimaryLight = Color.White

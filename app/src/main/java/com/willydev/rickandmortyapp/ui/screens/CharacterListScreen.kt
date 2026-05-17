@@ -1,5 +1,7 @@
 package com.willydev.rickandmortyapp.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,10 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -34,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,8 +41,10 @@ import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.willydev.rickandmortyapp.R
 import com.willydev.rickandmortyapp.data.model.Character
+import com.willydev.rickandmortyapp.ui.components.GlassmorphismCard
+import com.willydev.rickandmortyapp.ui.components.SciFiBackground
+import com.willydev.rickandmortyapp.ui.components.SciFiTopBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterListScreen(
     viewModel: CharacterListViewModel,
@@ -50,41 +52,42 @@ fun CharacterListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Rick and Morty") }
-            )
-        },
-        modifier = modifier.fillMaxSize()
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            when (val state = uiState) {
-                is CharacterListUiState.Loading -> {
-                    CircularProgressIndicator()
-                }
-                is CharacterListUiState.Error -> {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "Error: ${state.message}", color = MaterialTheme.colorScheme.error)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = { viewModel.retry() }) {
-                            Text("Retry")
+    SciFiBackground {
+        Scaffold(
+            topBar = {
+                SciFiTopBar()
+            },
+            containerColor = Color.Transparent,
+            modifier = modifier.fillMaxSize()
+        ) { paddingValues ->
+            Box(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                when (val state = uiState) {
+                    is CharacterListUiState.Loading -> {
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+                    }
+                    is CharacterListUiState.Error -> {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "Error: ${state.message}", color = MaterialTheme.colorScheme.error)
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Button(onClick = { viewModel.retry() }) {
+                                Text("Retry")
+                            }
                         }
                     }
-                }
-                is CharacterListUiState.Success -> {
-                    CharacterList(
-                        characters = state.characters,
-                        isNextPageLoading = state.isNextPageLoading,
-                        error = state.error,
-                        onLoadMore = { viewModel.loadNextPage() },
-                        onRetryMore = { viewModel.retry() }
-                    )
+                    is CharacterListUiState.Success -> {
+                        CharacterList(
+                            characters = state.characters,
+                            isNextPageLoading = state.isNextPageLoading,
+                            error = state.error,
+                            onLoadMore = { viewModel.loadNextPage() },
+                            onRetryMore = { viewModel.retry() }
+                        )
+                    }
                 }
             }
         }
@@ -107,7 +110,7 @@ fun CharacterList(
             val lastVisibleItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
                 ?: return@derivedStateOf false
 
-            lastVisibleItem.index >= listState.layoutInfo.totalItemsCount - 5
+            lastVisibleItem.index >= (listState.layoutInfo.totalItemsCount - 5)
         }
     }
 
@@ -137,7 +140,10 @@ fun CharacterList(
                         .padding(16.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(modifier = Modifier.size(32.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(32.dp),
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
 
@@ -146,11 +152,10 @@ fun CharacterList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                    horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(text = error, color = MaterialTheme.colorScheme.error)
                     TextButton(onClick = onRetryMore) {
-                        Text("Retry loading more")
+                        Text("Retry loading more", color = MaterialTheme.colorScheme.primary)
                     }
                 }
             }
@@ -163,22 +168,20 @@ fun CharacterItem(
     character: Character,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
+    GlassmorphismCard(
         modifier = modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier
-                .padding(12.dp)
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             SubcomposeAsyncImage(
                 model = character.image,
                 contentDescription = "Image of ${character.name}",
                 modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(8.dp)),
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(32.dp))
+                    .border(2.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(32.dp)),
                 contentScale = ContentScale.Crop,
                 loading = {
                     Box(
@@ -187,7 +190,8 @@ fun CharacterItem(
                     ) {
                         CircularProgressIndicator(
                             modifier = Modifier.size(24.dp),
-                            strokeWidth = 2.dp
+                            strokeWidth = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
@@ -203,18 +207,34 @@ fun CharacterItem(
             Column {
                 Text(
                     text = character.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
-                Text(
-                    text = "Status: ${character.status}",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = when (character.status.lowercase()) {
-                        "alive" -> MaterialTheme.colorScheme.primary
-                        "dead" -> MaterialTheme.colorScheme.error
-                        else -> MaterialTheme.colorScheme.secondary
-                    }
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(10.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(
+                                when (character.status.lowercase()) {
+                                    "alive" -> MaterialTheme.colorScheme.primary
+                                    "dead" -> MaterialTheme.colorScheme.error
+                                    else -> Color.LightGray
+                                }
+                            )
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "Status: ${character.status}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = when (character.status.lowercase()) {
+                            "alive" -> MaterialTheme.colorScheme.primary
+                            "dead" -> MaterialTheme.colorScheme.error
+                            else -> Color.LightGray
+                        }
+                    )
+                }
             }
         }
     }
