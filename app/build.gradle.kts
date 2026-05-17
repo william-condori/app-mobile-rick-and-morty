@@ -60,6 +60,9 @@ dependencies {
     implementation(libs.moshi.kotlin)
     "ksp"(libs.moshi.kotlin.codegen)
 
+    // Image Loading
+    implementation(libs.coil.compose)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

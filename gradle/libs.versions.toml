@@ -18,6 +18,9 @@ converterMoshi = "2.12.0"
 moshiKotlin = "1.15.2"
 moshiKotlinCodegen = "1.15.2"
 
+# Image Loading
+coilCompose = "2.7.0"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -43,6 +46,9 @@ converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", 
 # JSON Parsing
 moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshiKotlin" }
 moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshiKotlinCodegen" }
+
+# Image Loading
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
